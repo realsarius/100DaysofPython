@@ -1,0 +1,26 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(24, 24, 24);
+    color: rgb(233, 233, 233);
+}
+
+img {
+    max-width: 750px;
+    width: 100%;
+    border: 5px white solid;
+}
+
+
+.container {
+    margin-top:5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#meme-title {
+    font-size: 3.50rem;
+}

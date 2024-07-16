@@ -8,6 +8,10 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 import requests
 
+MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
+MOVIE_DB_API_KEY = "2a99123553f1fe4d8316deea7425df97"  # Make sure to use your actual API key
+MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
@@ -23,11 +27,11 @@ db.init_app(app)
 class Movie(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    year: Mapped[int] = mapped_column(Integer, nullable=False)
-    description: Mapped[str] = mapped_column(String, nullable=False)
-    rating: Mapped[float] = mapped_column(Float, nullable=False)
-    ranking: Mapped[int] = mapped_column(Integer, nullable=False)
-    review: Mapped[str] = mapped_column(String, nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=True)
+    description: Mapped[str] = mapped_column(String, nullable=True)
+    rating: Mapped[float] = mapped_column(Float, nullable=True)
+    ranking: Mapped[int] = mapped_column(Integer, nullable=True)
+    review: Mapped[str] = mapped_column(String, nullable=True)
     img_url: Mapped[str] = mapped_column(String, nullable=False)
 
     def __repr__(self):
@@ -35,39 +39,71 @@ class Movie(db.Model):
                 f"description='{self.description}', rating={self.rating}, "
                 f"ranking={self.ranking}, review='{self.review}', img_url='{self.img_url}')>")
 
-second_movie = Movie(
-    title="Avatar The Way of Water",
-    year=2022,
-    description="Set more than a decade after the events of the first film, learn the story of the Sully family (Jake, Neytiri, and their kids), the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.",
-    rating=7.3,
-    ranking=9,
-    review="I liked the water.",
-    img_url="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg"
-)
+# new_movie = Movie(
+#     title="Phone Booth",
+#     year=2002,
+#     description="Publicist Stuart Shepard finds himself trapped in a phone booth, pinned down by an extortionist's sniper rifle. Unable to leave or receive outside help, Stuart's negotiation with the caller leads to a jaw-dropping climax.",
+#     rating=7.3,
+#     ranking=10,
+#     review="My favourite character was the caller.",
+#     img_url="https://image.tmdb.org/t/p/w500/tjrX2oWRCM3Tvarz38zlZM7Uc10.jpg"
+# )
 
-# CREATE TABLE
+# # CREATE TABLE
 # with app.app_context():
 #     db.create_all()
 
 # with app.app_context():
-#     db.session.add(second_movie)
+#     db.session.add(new_movie)
 #     db.session.commit()
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
-        with app.app_context():
+        title=request.form['title']
+        movie_name = title.split(" ")
+        movie_name = "%20".join(movie_name)
+
+        url = f"https://api.themoviedb.org/3/search/movie?query={movie_name}&include_adult=false&language=en-US&page=1"
+
+
+        headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTk5MTIzNTUzZjFmZTRkODMxNmRlZWE3NDI1ZGY5NyIsIm5iZiI6MTcyMTA2MjIxOS40NDEzMSwic3ViIjoiNjY5NTJiZTk3ZDk5YmIxYjBjYTk3NDVmIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.3lITiSgys__fAV09n5n9NfNFAR6fFHjHAb9yJzgRAKM"
+        }   
+
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        results = response.json()
+        movies_list = results["results"]
+        
+        return render_template("select.html", movies=movies_list)
+
+    return render_template('add.html')
+
+@app.route("/find")
+def find_movie():
+    movie_api_id = request.args.get("id")
+    if movie_api_id:
+        movie_api_url = f"{MOVIE_DB_INFO_URL}/{movie_api_id}"
+        response = requests.get(movie_api_url, params={"api_key": MOVIE_DB_API_KEY, "language": "en-US"})
+        
+        if response.status_code == 200:
+            data = response.json()
             new_movie = Movie(
-            title=request.form['title'],
-            year=request.form['year'],
-            description=request.form['description'],
-            rating=request.form['rating'],
-            ranking=request.form['ranking'],
-            review=request.form['review'],
-            img_url=request.form['img_url'])
+                title=data["title"],
+                year=data["release_date"].split("-")[0],
+                img_url=f"{MOVIE_DB_IMAGE_URL}{data['poster_path']}" if data.get('poster_path') else None,
+                description=data["overview"]
+            )
             db.session.add(new_movie)
             db.session.commit()
-    return render_template('add.html')
+
+            return redirect(url_for("edit", movie_title=new_movie.title))
+        
+
+    return redirect(url_for("home"))
+
 
 @app.route('/delete')
 def delete_movie():
@@ -94,7 +130,7 @@ def edit():
     selected_movie = Movie.query.filter_by(title=movie_title).first()
     if not selected_movie:
         print("Movie not found in the database.")
-        return redirect(url_for('home'))  # Redirect or handle the error
+        return redirect(url_for('home'))
 
     if request.method == 'POST':
         selected_movie.rating = request.form['rating']

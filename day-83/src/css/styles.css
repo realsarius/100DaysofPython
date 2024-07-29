@@ -129,6 +129,7 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     font-family: "Inter", sans-serif;
+    font-weight: 500;
 }
 
 /*
@@ -196,9 +197,6 @@ li {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     opacity: 0;
     transform: translateY(-10px);
@@ -210,4 +208,21 @@ li:hover .dropdown-menu {
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
+}
+
+.typed-cursor {
+    font-size: 1.5rem;
+}
+
+/* #navbar{
+    position: fixed;
+    z-index: 100;
+} */
+
+#hero-section {
+    position: relative;
+}
+
+#canvas {
+    position: absolute;
 }

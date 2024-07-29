@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Flask App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <!-- Include more CSS files or meta tags here -->
+</head>
+<body>
+    {% include 'header.html' %}
+
+    {% include 'hero.html' %}
+
+    <main class="container mx-auto">
+        {% block content %}
+        <!-- Content specific to each page will be injected here -->
+        {% endblock %}
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- Inject JavaScript files here -->
+    <script src="{{ url_for('static', filename='scripts/scripts.js') }}" defer></script>
+    
+</body>
+</html>

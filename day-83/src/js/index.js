@@ -1,13 +1,28 @@
 import Typed from "typed.js";
 
+
+
+// Smooth scrolling
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    document.querySelector(this.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
+    });
+  });
+});
+
+// Hero Typed
 const typed = new Typed("#typed", {
-  strings: ["React developer", "Python Developer"],
+  strings: ["React developer.", "Python Developer."],
   typeSpeed: 100,
   backSpeed: 100,
   backDelay: 2000,
   loop: true,
 });
 
+// Hero section background particles
 window.onload = function () {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");

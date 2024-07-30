@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Flask App{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/main.css') }}">
     <!-- Include more CSS files or meta tags here -->
+    <script>
+       function setTheme(mode) {
+            if (mode === 'auto') {
+                document.documentElement.classList.remove('dark', 'light');
+                localStorage.removeItem('theme');
+
+                // Automatically set theme based on system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.add('light');
+                }
+            } else {
+                document.documentElement.classList.remove('dark', 'light');
+                document.documentElement.classList.add(mode);
+                localStorage.setItem('theme', mode);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'auto';
+            setTheme(savedTheme);
+        });
+    </script>
+    
 </head>
-<body class="dark:bg-zinc-950 dark:text-zinc-100 bg-zinc-50 text-zinc-950">
+
+<body class="dark:bg-zinc-950 dark:text-zinc-100 bg-zinc-50 text-zinc-950 transition-colors duration-200">
     {% include 'header.html' %}
 
     {% include 'hero.html' %}
@@ -25,6 +52,7 @@
     <!-- Inject JavaScript files here -->
     <script src="{{ url_for('static', filename='dist/bundle.js') }}" type="module" defer></script>
     <!-- <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js" type="module" defer></script> -->
-    
+
 </body>
+
 </html>

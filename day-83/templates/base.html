@@ -34,7 +34,10 @@
     
 </head>
 
-<body class="dark:bg-zinc-950 dark:text-zinc-100 bg-zinc-50 text-zinc-950 transition-colors duration-200">
+<body class="dark:bg-zinc-950 dark:text-zinc-100 bg-zinc-50 text-zinc-950 transition-colors duration-200 select-none">
+
+
+    <div id="circle"></div>
     {% include 'header.html' %}
 
     {% include 'hero.html' %}
@@ -44,6 +47,8 @@
         <!-- Content specific to each page will be injected here -->
         {% endblock %}
     </main>
+
+    {% include 'projects.html' %}
 
     {% include 'contact.html' %}
 

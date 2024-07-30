@@ -11,8 +11,10 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
+    "aos": "^2.3.4",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
+    "postcss-loader": "^8.1.1",
     "typed.js": "^2.1.0"
   }
 }

@@ -1,55 +1,67 @@
-<section class="" id="contact-form">
-  <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
+<section id="contact-form">
+  <div
+    class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md"
+    data-aos="fade-up"
+    data-aos-duration="1000"
+  >
     <h2
-      class="mb-4 text-4xl tracking-tight font-extrabold text-zinc-950 dark:text-zinc-100 transition-colors duration-200"
+      class="mb-2 text-4xl tracking-tight font-extrabold text-zinc-950 dark:text-zinc-100"
+      data-aos="fade-down"
+      data-aos-duration="1000"
     >
       Contact Me
     </h2>
-    <form action="#" class="space-y-8">
-      <div>
+
+    <!-- Flash messages -->
+    <div id="flash-messages" class="mb-2 text-sky-400" data-aos="fade-up" data-aos-duration="1000"></div>
+
+    <form id="contact-form" action="{{ url_for('home') }}" method="post" class="space-y-8">
+      <div data-aos="fade-right" data-aos-delay="100">
         <label
           for="email"
-          class="block mb-2 text-sm font-medium text-zinc-950 dark:text-zinc-100 transition-colors duration-200"
-          >Your email</label
-        >
+          class="block mb-2 text-sm font-medium text-zinc-950 dark:text-zinc-100"
+        >Your email</label>
         <input
           type="email"
           id="email"
-          class="shadow-sm bg-gray-50 border border-zinc-200 text-zinc-950 text-sm rounded-lg block w-full p-2.5 dark:bg-zinc-900 dark:border-zinc-700 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light transition-colors duration-200"
+          name="email"
+          class="shadow-sm bg-gray-50 border border-zinc-200 text-zinc-950 text-sm rounded-lg block w-full p-2.5 dark:bg-zinc-900 dark:border-zinc-700 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light"
           placeholder="name@email.com"
           required
         />
       </div>
-      <div>
+      <div data-aos="fade-left" data-aos-delay="200">
         <label
           for="subject"
-          class="block mb-2 text-sm font-medium text-zinc-950 dark:text-zinc-100 transition-colors duration-200"
-          >Subject</label
-        >
+          class="block mb-2 text-sm font-medium text-zinc-950 dark:text-zinc-100"
+        >Subject</label>
         <input
           type="text"
           id="subject"
-          class="block p-3 w-full text-sm text-zinc-950 bg-gray-50 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm dark:bg-zinc-900 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light transition-colors duration-200"
-          placeholder="Let me know why are you contacting me"
+          name="subject"
+          class="block p-3 w-full text-sm text-zinc-950 bg-gray-50 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm dark:bg-zinc-900 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light"
+          placeholder="Let me know why you are contacting me"
           required
         />
       </div>
-      <div class="sm:col-span-2">
+      <div data-aos="fade-up" data-aos-delay="300">
         <label
           for="message"
-          class="block mb-2 text-sm font-medium text-zinc-950 dark:text-zinc-100 transition-colors duration-200"
-          >Your message</label
-        >
+          class="block mb-2 text-sm font-medium text-zinc-950 dark:text-zinc-100"
+        >Your message</label>
         <textarea
           id="message"
+          name="message"
           rows="6"
-          class="block p-2.5 w-full text-sm text-zinc-950 bg-gray-50 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 transition-colors duration-200"
+          class="block p-2.5 w-full text-sm text-zinc-950 bg-gray-50 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500"
           placeholder="Tell me what's on your mind..."
         ></textarea>
       </div>
       <button
         type="submit"
-        class="text-sm border border-solid dark:border-zinc-800 dark:bg-zinc-100 bg-zinc-800 hover:bg-zinc-600 dark:active:bg-zinc-400 active:bg-zinc-500 dark:text-zinc-950 text-zinc-100 dark:hover:bg-zinc-300 transition-colors duration-200 py-3 px-4 rounded-md"
+        class="text-sm border border-solid dark:border-zinc-800 dark:bg-zinc-100 bg-zinc-800 hover:bg-zinc-600 dark:active:bg-zinc-400 active:bg-zinc-500 dark:text-zinc-950 text-zinc-100 dark:hover:bg-zinc-300 py-3 px-4 rounded-md"
+        data-aos="zoom-in"
+        data-aos-delay="400"
       >
         Send message
       </button>

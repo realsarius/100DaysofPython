@@ -1,46 +1,59 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
-from PIL import Image, ImageTk
+from tkinter import filedialog, simpledialog, messagebox
+from PIL import Image, ImageDraw, ImageFont
 
-def upload_image():
-    file_path = filedialog.askopenfilename()
-    if file_path:
+def apply_watermark():
+    file_path = filedialog.askopenfilename(
+        title="Select an image",
+        filetypes=[
+            ("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.gif"),
+            ("All files", "*.*")
+        ]
+    )
+    if not file_path:
+        return
+
+    save_path = filedialog.asksaveasfilename(
+        defaultextension=".png",
+        filetypes=[("PNG files", "*.png"), ("All files", "*.*")],
+        title="Save watermarked image as"
+    )
+    if not save_path:
+        return
+    
+    watermark_text = simpledialog.askstring("Watermark", "Enter watermark text:")
+    if not watermark_text:
+        return
+
+    try:
         image = Image.open(file_path)
-        
-        image.thumbnail((root.winfo_screenwidth() - 50, root.winfo_screenheight() - 150))
-        photo = ImageTk.PhotoImage(image)
-        
+        draw = ImageDraw.Draw(image)
+        width, height = image.size
 
-        canvas.config(scrollregion=canvas.bbox("all"))
-        canvas.config(width=image.width, height=image.height)
+        font_size = min(width, height) // 10
+        try:
+            font = ImageFont.truetype("arial.ttf", font_size)
+        except IOError:
+            font = ImageFont.load_default()
+            font_size = 20 
 
+        text_bbox = draw.textbbox((0, 0), watermark_text, font=font)
+        text_width = text_bbox[2] - text_bbox[0]
+        text_height = text_bbox[3] - text_bbox[1]
+        text_x = width - text_width - 10
+        text_y = height - text_height - 10
 
-        canvas.create_image(0, 0, anchor="nw", image=photo)
-        canvas.image = photo 
+        draw.text((text_x, text_y), watermark_text, font=font, fill=(255, 255, 255, 128))
 
-        messagebox.showinfo("Success", "Image uploaded successfully!")
-
+        image.save(save_path)
+        messagebox.showinfo("Success", "Watermarked image saved successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
 
 root = tk.Tk()
-root.title("Image Uploader")
+root.title("Image Watermarker")
 
-root.geometry("800x600")
-
-frame = tk.Frame(root)
-frame.pack(fill=tk.BOTH, expand=True)
-
-canvas = tk.Canvas(frame)
-canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-v_scroll = tk.Scrollbar(frame, orient="vertical", command=canvas.yview)
-v_scroll.pack(side=tk.RIGHT, fill=tk.Y)
-
-h_scroll = tk.Scrollbar(frame, orient="horizontal", command=canvas.xview)
-h_scroll.pack(side=tk.BOTTOM, fill=tk.X)
-
-canvas.config(yscrollcommand=v_scroll.set, xscrollcommand=h_scroll.set)
-
-upload_button = tk.Button(root, text="Upload Image", command=upload_image)
-upload_button.pack(pady=10)
+button = tk.Button(root, text="Apply Watermark", command=apply_watermark)
+button.pack(pady=20)
 
 root.mainloop()
